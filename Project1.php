@@ -14,7 +14,8 @@ if (!empty($result)) {
         $arrData[] = $row;
     }
 }
-foreach ($arrData as $key => $rows) {
+foreach ($arrData as $rows) {
+
     $table .= '<tr>';
     foreach ($rows as $colName => $value) {
         if ($colName != 'id') {

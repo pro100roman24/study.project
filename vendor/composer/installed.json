@@ -1,0 +1,40 @@
+[
+    {
+        "name": "ovchinnikov/my-captcha",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/TiRan161/Captcha.git",
+            "reference": "5d0e9d6ff0aa951bce9c68c8decb0a4e1d5b7320"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/TiRan161/Captcha/zipball/5d0e9d6ff0aa951bce9c68c8decb0a4e1d5b7320",
+            "reference": "5d0e9d6ff0aa951bce9c68c8decb0a4e1d5b7320",
+            "shasum": ""
+        },
+        "require": {
+            "ext-gd": "*"
+        },
+        "time": "2020-01-10T18:23:05+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "App\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "proprietary"
+        ],
+        "authors": [
+            {
+                "name": "Ovchinnikov Viktor",
+                "email": "vitek14@mail.com"
+            }
+        ],
+        "description": "description_text"
+    }
+]
