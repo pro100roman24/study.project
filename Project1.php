@@ -11,7 +11,7 @@ if (mysqli_connect_errno()) {
     printf("Не удалось подключиться: %s\n", mysqli_connect_error());
     exit();
 }
-$table = 'tanks';
+$table = 'tanks'; //vsgsd
 $query1 = 'SELECT * FROM '. $table;
 $query2 = 'create table ' . $table . " (id integer not null auto_increment primary key, tank varchar(25),  nation varchar(25), type varchar(25), turret varchar(25), durability integer)";
 $table = '<table><tr><th>Название</th><th>Нация</th><th>Тип</th><th>Наличие башни</th><th>Живучесть</th></tr>';
