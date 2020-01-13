@@ -19,7 +19,7 @@ $query3 = "INSERT INTO $tab (tank, nation, type, turret, durability) VALUES ('".
 if (mysqli_query($link, $query1)!==false){
     $test="Таблица $tab существует";
     echo $test;
-    $result = mysqli_query($link, $query1);
+    $result = mysqli_query($link, $query1); //
 }
 else{
     $test="Таблица $tab не существовала и была создана с параметрами по умолчанию";
