@@ -1,32 +1,32 @@
 <link rel="stylesheet" type="text/css" href="Style.css"></link>
 <?php
-$ini_array = parse_ini_file("conf.ini");
-$host = $ini_array['host'];
-$user = $ini_array['user'];
-$pass = $ini_array['password'];
-$db = $ini_array['database'];
+$iniArray = parse_ini_file("conf.ini");
+$host = $iniArray['host'];
+$user = $iniArray['user'];
+$pass = $iniArray['password'];
+$db = $iniArray['database'];
 $link = mysqli_connect($host, $user, $pass, $db) or die ('Нет связи с Базой Данных');
 //$link = mysqli_connect($ini_array['host'], $ini_array['user'], $ini_array['password'], $ini_array['database']) or die ('Нет связи с Базой Данных');
 if (mysqli_connect_errno()) {
     printf("Не удалось подключиться: %s\n", mysqli_connect_error());
     exit();
 }
-$tab = 'tanks15';
+$tab = 'tanks2';
 $table = '<table><tr><th>Название</th><th>Нация</th><th>Тип</th><th>Наличие башни</th><th>Живучесть</th></tr>';
-$query1 = "SELECT * FROM $tab";
-$query2 = "create table  $tab (id integer not null auto_increment primary key, tank varchar(25),  nation varchar(25), type varchar(25), turret varchar(25), durability integer)";
-$query3 = "INSERT INTO $tab (tank, nation, type, turret, durability) VALUES ('".$ini_array['tank']."', '". $ini_array['nation'] . "', '". $ini_array['type'] ."', '".$ini_array['turret']."', '".$ini_array['Durability']."')";
-if (mysqli_query($link, $query1)!==false){
+$querySelect = "SELECT * FROM $tab";
+$queryCreate = "create table IF NOT EXISTS $tab (id integer not null auto_increment primary key, tank varchar(25),  nation varchar(25), type varchar(25), turret varchar(25), durability integer)";
+$queryInsert = "INSERT INTO $tab (tank, nation, type, turret, durability) VALUES ('".$iniArray['tank']."', '". $iniArray['nation'] . "', '". $iniArray['type'] ."', '".$iniArray['turret']."', '".$iniArray['Durability']."')";
+if (mysqli_query($link, $querySelect)!==false){
     $test="Таблица $tab существует";
     echo $test;
-    $result = mysqli_query($link, $query1); //
+    $result = mysqli_query($link, $querySelect);
 }
 else{
     $test="Таблица $tab не существовала и была создана с параметрами по умолчанию";
     echo $test;
-    mysqli_query($link, $query2);
-    mysqli_query($link, $query3);
-    $result = mysqli_query($link, $query1);
+    mysqli_multi_query($link, $queryCreate);
+    mysqli_query($link, $queryInsert);
+    $result = mysqli_query($link, $querySelect);
 }
     if (!empty($result)) {
     $arrData = [];
@@ -47,4 +47,5 @@ foreach ($arrData as $rows) {
     }
 }
 echo $table;
+mysqli_close($link);
 ?>
