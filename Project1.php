@@ -9,12 +9,30 @@ $link = mysqli_connect($host, $user, $pass, $db) or die ('Нет связи с �
 if (mysqli_connect_errno()) {
     printf("Не удалось подключиться: %s\n", mysqli_connect_error());
     exit();
-}
+};
 $tab = 'tanks1';
 $table = '<table><tr><th>Название</th><th>Нация</th><th>Тип</th><th>Наличие башни</th><th>Живучесть</th></tr>';
 $querySelect = "SELECT * FROM $tab";
-$queryCreate = "create table IF NOT EXISTS $tab (id integer not null auto_increment primary key, tank varchar(25),  nation varchar(25), type varchar(25), turret varchar(25), durability integer)";
-$queryInsert = "INSERT INTO $tab (tank, nation, type, turret, durability) VALUES ('".$iniArray['tank']."', '". $iniArray['nation'] . "', '". $iniArray['type'] ."', '".$iniArray['turret']."', '".$iniArray['Durability']."')";
+$queryCreate = "create table IF NOT EXISTS $tab 
+    (
+        id integer not null auto_increment primary key, tank varchar(25),
+        nation varchar(25), type varchar(25), turret varchar(25), durability integer
+    )";
+$queryInsert = "INSERT INTO $tab 
+    (tank, nation, type, turret, durability)
+    VALUES ('".$iniArray['tank']."', '". $iniArray['nation'] . "', '".
+    $iniArray['type'] ."', '".$iniArray['turret']."', '".$iniArray['Durability'].
+    "')";
+
+$json = file_get_contents('new.json');
+$jsonArray = (json_decode($json));
+var_dump($jsonArray);          //вывод прочитанного из json
+foreach ($jsonArray as $jrows){
+    foreach ($jrows as $key => $jvalues){
+         var_dump($jvalues); //вывод 3-х одномерных массивов
+    }
+}
+
 if (mysqli_query($link, $querySelect)!==false and mysqli_num_rows(mysqli_query($link, $querySelect))==0){ //если select вернул не пустое значение и в таблице 0 строк
 	mysqli_query($link, $queryInsert);                                                                //тогда заполняем пустую таблицу нашей строкой из ini файла
     $result = mysqli_query($link, $querySelect);                                                     //результат select-а кладем в result
