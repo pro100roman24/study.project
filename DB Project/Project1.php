@@ -10,33 +10,36 @@ if (mysqli_connect_errno()) {
     printf("Не удалось подключиться: %s\n", mysqli_connect_error());
     exit();
 };
-$tab = 'tanks1';
+$tab = 'tanks3';
+$json = file_get_contents('new.json');
+$jsonArray = (json_decode($json, true));
 $table = '<table><tr><th>Название</th><th>Нация</th><th>Тип</th><th>Наличие башни</th><th>Живучесть</th></tr>';
 $querySelect = "SELECT * FROM $tab";
-$queryCreate = "create table IF NOT EXISTS $tab 
+$queryCreate = "create table $tab 
     (
         id integer not null auto_increment primary key, tank varchar(25),
         nation varchar(25), type varchar(25), turret varchar(25), durability integer
     )";
-$queryInsert = "INSERT INTO $tab 
+$insertIni = "INSERT INTO $tab 
     (tank, nation, type, turret, durability)
     VALUES ('".$iniArray['tank']."', '". $iniArray['nation'] . "', '".
     $iniArray['type'] ."', '".$iniArray['turret']."', '".$iniArray['Durability'].
     "')";
 
-$json = file_get_contents('new.json');
-$jsonArray = (json_decode($json));
-var_dump($jsonArray);          //вывод прочитанного из json
-foreach ($jsonArray as $jrows){
-    foreach ($jrows as $key => $jvalues){
-         var_dump($jvalues); //вывод 3-х одномерных массивов
-    }
-}
-
 if (mysqli_query($link, $querySelect)!==false and mysqli_num_rows(mysqli_query($link, $querySelect))==0){ //если select вернул не пустое значение и в таблице 0 строк
-	mysqli_query($link, $queryInsert);                                                                //тогда заполняем пустую таблицу нашей строкой из ini файла
-    $result = mysqli_query($link, $querySelect);                                                     //результат select-а кладем в result
+    foreach ($jsonArray as $jrows){
+        foreach ($jrows as $jvalues){
+            $insertJson = "INSERT INTO $tab (tank, nation, type, turret, durability)
+            VALUES ('".$jvalues['tank']."', '". $jvalues['nation'] . "', '".
+                $jvalues['type'] ."', '".$jvalues['turret']."', '".$jvalues['durability'].
+                "')";
+            mysqli_query($link,$insertJson);       //создаем в базе строчки из json
+        }
+    }
+    mysqli_query($link, $insertIni);                                    //тогда заполняем пустую таблицу нашей строкой из ini файла
+    $result = mysqli_query($link, $querySelect);                               //результат select-а кладем в result
     $text = "Таблица $tab была пустой и заполнена параметрами по умолчанию";
+
 }
 elseif (mysqli_query($link, $querySelect)!==false){                    //если select вернул не пустое значение, но в таблице уже не 0 строк
     $text = "Таблица $tab существует ";
@@ -44,8 +47,17 @@ elseif (mysqli_query($link, $querySelect)!==false){                    //есл�
 }
 else{                                                               //иначе таблицы не существует
     $text = "Таблица $tab не существовала и была создана с параметрами по умолчанию";
-    mysqli_query($link, $queryCreate);                           //создаем таблицу
-    mysqli_query($link, $queryInsert);                           //заполняем строкой из ini файла
+    mysqli_query($link, $queryCreate);     //создаем таблицу
+    foreach ($jsonArray as $jrows){
+        foreach ($jrows as $jvalues){
+            $insertJson = "INSERT INTO $tab (tank, nation, type, turret, durability)
+            VALUES ('".$jvalues['tank']."', '". $jvalues['nation'] . "', '".
+            $jvalues['type'] ."', '".$jvalues['turret']."', '".$jvalues['durability'].
+                "')";
+            mysqli_query($link,$insertJson);       //создаем в базе строчки из json
+        }
+    }
+    mysqli_query($link, $insertIni);                           //заполняем строкой из ini файла
     $result = mysqli_query($link, $querySelect);                 //результат select-а кладем в result
 }
 
